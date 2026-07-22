@@ -47,7 +47,7 @@
     "dev": "vite dev",
     "build:css": "tailwindcss -i src/lib/styles.css -o dist/editor.css --minify",
     "build:preprocess": "node scripts/preprocess-styles.js",
-    "build": "svelte-package && npm run build:preprocess && npm run build:css",
+    "build": "svelte-package && npm run build:css && npm run build:preprocess",
     "check": "svelte-check --tsconfig ./tsconfig.json",
     "prepublishOnly": "npm run build"
   },

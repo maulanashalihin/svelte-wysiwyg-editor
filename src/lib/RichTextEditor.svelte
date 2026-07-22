@@ -714,7 +714,7 @@
   <div
     bind:this={editor}
     contenteditable={!disabled}
-    class="editor prose prose-sm sm:prose lg:prose-lg max-w-none dark:prose-invert focus:outline-none"
+    class="editor swe-content focus:outline-none"
     style="min-height: {minHeight}; direction: {dir};"
     {dir}
     data-placeholder={placeholder}
@@ -800,4 +800,32 @@
     content: attr(data-placeholder);
     @apply text-gray-400 dark:text-gray-500 absolute cursor-text select-none;
   }
+
+  /* WYSIWYG content typography (replaces @tailwindcss/typography prose).
+     Self-contained so consumers don't need the typography plugin. */
+  .swe-content {
+    @apply text-gray-800 dark:text-gray-200 leading-relaxed;
+  }
+  .swe-content h1 { @apply text-3xl font-bold mt-6 mb-4; }
+  .swe-content h2 { @apply text-2xl font-bold mt-6 mb-3; }
+  .swe-content h3 { @apply text-xl font-semibold mt-5 mb-2; }
+  .swe-content p  { @apply my-3; }
+  .swe-content ul { @apply list-disc pl-6 my-3; }
+  .swe-content ol { @apply list-decimal pl-6 my-3; }
+  .swe-content li { @apply my-1; }
+  .swe-content a  { @apply text-blue-600 underline hover:text-blue-700; }
+  .swe-content blockquote {
+    @apply border-l-4 border-gray-300 dark:border-gray-600 pl-4 italic my-4 text-gray-600 dark:text-gray-400;
+  }
+  .swe-content pre {
+    @apply bg-gray-100 dark:bg-gray-900 rounded p-4 overflow-x-auto my-4 text-sm font-mono;
+  }
+  .swe-content code {
+    @apply bg-gray-100 dark:bg-gray-900 rounded px-1 py-0.5 text-sm font-mono;
+  }
+  .swe-content pre code { @apply bg-transparent p-0; }
+  .swe-content img { @apply rounded my-4 max-w-full h-auto; }
+  .swe-content hr  { @apply border-gray-200 dark:border-gray-700 my-6; }
+  .swe-content figure { @apply my-4; }
+  .swe-content figcaption { @apply text-center text-sm text-gray-500 mt-2 italic; }
 </style>
