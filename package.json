@@ -1,0 +1,57 @@
+{
+  "name": "svelte-wysiwyg-editor",
+  "version": "0.1.0",
+  "description": "A dependency-light WYSIWYG rich text editor for Svelte 4 & 5. Built on the native contenteditable + document.execCommand API, with link/image/text bubbles, markdown import, HTML source view, fullscreen, and configurable upload/gallery hooks.",
+  "license": "MIT",
+  "author": "Maulana Shalihin",
+  "keywords": [
+    "svelte",
+    "wysiwyg",
+    "rich-text",
+    "editor",
+    "contenteditable",
+    "svelte-component",
+    "svelte-4",
+    "svelte-5"
+  ],
+  "svelte": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "svelte": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./RichTextEditor.svelte": {
+      "types": "./dist/RichTextEditor.svelte.d.ts",
+      "svelte": "./dist/RichTextEditor.svelte",
+      "default": "./dist/RichTextEditor.svelte"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "dev": "vite dev",
+    "build": "svelte-package",
+    "check": "svelte-check --tsconfig ./tsconfig.json",
+    "prepublishOnly": "npm run build"
+  },
+  "peerDependencies": {
+    "svelte": "^4.0.0 || ^5.0.0"
+  },
+  "dependencies": {
+    "marked": "^14.0.0"
+  },
+  "devDependencies": {
+    "@sveltejs/package": "^2.3.0",
+    "@sveltejs/vite-plugin-svelte": "^3.1.0",
+    "svelte": "^4.2.0",
+    "svelte-check": "^4.0.0",
+    "typescript": "^5.6.0",
+    "vite": "^5.4.0"
+  }
+}
