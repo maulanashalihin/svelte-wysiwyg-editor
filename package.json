@@ -1,6 +1,6 @@
 {
   "name": "svelte-wysiwyg-editor",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A dependency-light WYSIWYG rich text editor for Svelte 4 & 5. Built on the native contenteditable + document.execCommand API, with link/image/text bubbles, markdown import, HTML source view, fullscreen, and configurable upload/gallery hooks.",
   "license": "MIT",
   "author": "Maulana Shalihin",
