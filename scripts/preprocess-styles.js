@@ -46,6 +46,43 @@ const EDITOR_CSS = join(DIST_DIR, 'editor.css');
 const SCOPE_SELECTOR = '.rich-text-editor-container';
 
 /**
+ * PostCSS plugin that converts Tailwind's `:is(.dark *)` selectors
+ * to Svelte's `:global(.dark)` syntax so the Svelte compiler doesn't
+ * mangle them.
+ *
+ * Tailwind v3.4+ with darkMode:'class' generates:
+ *   .foo:is(.dark *) { ... }
+ *
+ * Svelte's compiler tries to add its hash inside :is(), producing:
+ *   :is(.dark:where(.svelte-hash) :where(.svelte-hash)) { ... }
+ * which is broken and never matches.
+ *
+ * This plugin transforms:
+ *   .foo:is(.dark *)           → :global(.dark) .foo
+ *   .foo:hover:is(.dark *)     → :global(.dark) .foo:hover
+ *   .foo.active:is(.dark *)    → :global(.dark) .foo.active
+ *
+ * Svelte correctly handles :global() — it won't add hashes to the
+ * part inside :global(), only to the rest of the selector.
+ */
+const fixDarkModePlugin = {
+  postcssPlugin: 'fix-dark-mode-for-svelte',
+  Rule(rule) {
+    if (!rule.selector.includes(':is(.dark')) return;
+
+    rule.selectors = rule.selectors.map((sel) => {
+      // Pattern: <base>:is(.dark *)<rest>
+      // Replace with: :global(.dark) <base><rest>
+      const match = sel.match(/^(.+?):is\(\.dark \*\)(.*)$/);
+      if (match) {
+        return `:global(.dark) ${match[1]}${match[2]}`;
+      }
+      return sel;
+    });
+  },
+};
+
+/**
  * PostCSS plugin that prefixes all rule selectors with SCOPE_SELECTOR,
  * unless the rule is inside @keyframes or already contains the scope.
  */
@@ -97,10 +134,12 @@ async function processFile(filePath) {
     const [fullMatch, attrs, cssContent] = match;
     if (!cssContent.trim()) continue;
 
-    // Preprocess @apply (and any other Tailwind/PostCSS features)
+    // Preprocess @apply (and any other Tailwind/PostCSS features),
+    // then fix dark mode selectors for Svelte compatibility.
     const processed = await postcss([
       tailwindcss({ config: join(PROJECT_ROOT, 'tailwind.config.js') }),
       autoprefixer,
+      fixDarkModePlugin,
     ]).process(cssContent, { from: undefined });
 
     const replacement = `<style${attrs || ''}>${processed.css}</style>`;
