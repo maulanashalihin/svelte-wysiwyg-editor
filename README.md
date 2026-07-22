@@ -51,7 +51,7 @@ That's it. The package ships a self-contained `editor.css` with all styling pre-
 <RichTextEditor bind:value={html} on:change={(e) => html = e.detail.html} />
 ```
 
-> **Important:** You must import `'svelte-wysiwyg-editor/editor.css'` once in your app entry (or in any component that uses the editor). This file contains the pre-compiled Tailwind utility classes used by the editor's templates. Without it, the editor will render unstyled because Tailwind's content scanner cannot see files inside `node_modules` (they are excluded via `.gitignore`).
+> **Important:** You must import `'svelte-wysiwyg-editor/editor.css'` once in your app entry (or in any component that uses the editor). This file contains the pre-compiled Tailwind utility classes used by the editor's templates, scoped to the editor container. Without it, the editor will render unstyled.
 
 ### With image upload
 
@@ -137,23 +137,31 @@ When `galleryFetcher` is provided, the "Choose from Gallery" button appears and 
 
 ## Styling
 
-All styling is pre-compiled into `dist/editor.css` during the package build. This includes:
+The package is fully self-contained styling-wise. No Tailwind CSS, PostCSS, or `@tailwindcss/typography` required in your project.
 
-- **Utility classes** used inline in templates (`flex`, `items-center`, `min-w-[300px]`, etc.) — pre-compiled with Tailwind JIT
-- **Component styles** from `<style>` blocks (`.toolbar`, `.link-bubble`, `.bubble-btn`, etc.) — `@apply` directives pre-processed into raw CSS
-- **WYSIWYG content typography** via `.swe-content` class — self-contained replacement for `@tailwindcss/typography`'s `prose`, scoped to the editor area only
+All styling is handled in two layers:
 
-The `.svelte` files in `dist/` ship with empty `<style>` blocks — all CSS comes from `editor.css`. This avoids any dependency on the consumer's Tailwind/PostCSS setup and works in both Vite dev and build modes.
-
-**You must import the CSS once in your app entry:**
+1. **`editor.css`** — pre-compiled Tailwind utility classes used inline in templates (`flex`, `items-center`, `min-w-[300px]`, etc.), scoped to `.rich-text-editor-container` so they don't leak into your app. Import once:
 
 ```js
 import 'svelte-wysiwyg-editor/editor.css';
 ```
 
+2. **`<style>` blocks in `.svelte` files** — component-specific styles (`.toolbar`, `.popover`, `.bubble-btn`, etc.) with `@apply` pre-processed into raw CSS. The Svelte compiler in your project compiles these and adds per-component hashes, preventing class name conflicts between components.
+
+3. **WYSIWYG content typography** — handled by `.swe-content` class (defined in `<style>` blocks), a self-contained replacement for `@tailwindcss/typography`'s `prose`, scoped to the editor area only.
+
 ### Dark mode
 
-The editor uses `dark:` variant classes (compiled to `:is(.dark *)` selectors in `editor.css`). To enable dark mode, add the `dark` class to a parent element (typically `<html class="dark">`). This matches Tailwind's default `class`-based dark mode strategy.
+The editor uses Tailwind's `dark:` variant classes with `class`-based dark mode. To enable dark mode, add the `dark` class to a parent element (typically `<html class="dark">`):
+
+```js
+// Toggle dark mode
+document.documentElement.classList.add('dark');    // enable
+document.documentElement.classList.remove('dark'); // disable
+```
+
+Dark mode styles are compiled to `:global(.dark)` selectors in `<style>` blocks and `:is(.dark *)` in `editor.css`, both of which match when a `.dark` ancestor is present.
 
 ## How it works
 
