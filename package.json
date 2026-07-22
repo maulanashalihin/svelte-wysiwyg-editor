@@ -4,6 +4,14 @@
   "description": "A dependency-light WYSIWYG rich text editor for Svelte 4 & 5. Built on the native contenteditable + document.execCommand API, with link/image/text bubbles, markdown import, HTML source view, fullscreen, and configurable upload/gallery hooks.",
   "license": "MIT",
   "author": "Maulana Shalihin",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maulanashalihin/svelte-wysiwyg-editor.git"
+  },
+  "homepage": "https://github.com/maulanashalihin/svelte-wysiwyg-editor#readme",
+  "bugs": {
+    "url": "https://github.com/maulanashalihin/svelte-wysiwyg-editor/issues"
+  },
   "keywords": [
     "svelte",
     "wysiwyg",
